@@ -4,67 +4,98 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.provider.SyncStateContract;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import android.graphics.Canvas;
 
+
+/**
+ * this class...
+ * SURFACE HOLDER: "Abstract interface to someone holding a display surface.
+ * Allows you to control the surface size and format, edit the pixels in the surface,
+ * and monitor changes to the surface"
+ */
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
     private RectPlayer player;
     private Point playerPoint;
+    private ObstacleManager obstacleManager;
 
+    /**
+     * constructor
+     * @param  context current context
+     */
     public  GamePanel(Context context)
     {
         super(context);
-
         getHolder().addCallback(this);
-        thread = new MainThread(getHolder(), this);
-        player = new RectPlayer(new Rect(100,100,200,200), Color.RED);
-        playerPoint = new Point(200, 200);
         setFocusable(true);
 
+        thread = new MainThread(getHolder(), this); //instantiate new thread
+        player = new RectPlayer(new Rect(100,100,200,200), Color.RED); //our main player
+        playerPoint = new Point(200, 200); //starting point
+        obstacleManager = new ObstacleManager(300, 350, 75,Color.BLUE); //obstacles
 
     }
 
+    /**
+     * TODO
+     * @param holder
+     * @param format
+     * @param width
+     * @param height
+     */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
     {
 
     }
 
+    /**
+     * starting the thread
+     * @param holder surface holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
         thread = new MainThread(getHolder(), this);
-        thread.setRunning(true);
-        thread.start();
+        thread.setRunning(true); //loops
+        thread.start(); //starts
 
         //playerThread = new MovePlayer(player, false);
         //new Thread(playerThread).start();
     }
+
+
+    /**
+     * stop the current thread
+     * @param holder surface holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
         boolean retry = true;
 
-        while (true)
+        while (retry)
         {
             try {
-                thread.setRunning(false);
-                thread.join();
+                thread.setRunning(false); //stops the game loop
+                thread.join(); //finish running thread and then terminates
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-            retry = false;
+            retry = false; //takes a few tries to destroy thread. loops until successful destroy
         }
     }
 
+    /**
+     * instructions for touch event
+     * @param the touch event
+     */
     boolean MoveUp = false;
     @Override
     public boolean onTouchEvent (MotionEvent event)
@@ -85,6 +116,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
+    /**
+     * redraws the main player upon touch event
+     */
     public void update()
     {
         if(!MoveUp)
@@ -103,18 +137,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 MoveUp = false;
             }
             player.update(currentPoint);
+            obstacleManager.update();
         }
 
 
     }
 
+    /**
+     * @param  canvas the canvas to draw on
+     */
     @Override
     public void draw (Canvas canvas)
     {
         super.draw(canvas);
-        //canvas will be white
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.WHITE);   //canvas will be white
 
         player.draw(canvas);
+        obstacleManager.draw(canvas);
     }
 }
