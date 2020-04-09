@@ -75,7 +75,6 @@ public class Obstacle implements GameObject {
     public void decrementX(float x){
         rectangle.left -= x;
         rectangle.right -= x;
-
     }
 
 

@@ -43,13 +43,13 @@ public class ObstacleManager {
         }**/
 
         int currX = (Constants.SCREEN_WIDTH + 5); //we start off screen to the right
-        while(currX >  Constants.SCREEN_WIDTH/5){
+        while(currX  >  Constants.SCREEN_WIDTH/1){
             //while it hasn't gone onto the screen yet, we keep generating obstacles (currently rectangles)
             //we want there to be a random gap for the player to go through
             int left = Constants.SCREEN_WIDTH + 5;
             int top = (int)(Math.random()*(Constants.SCREEN_HEIGHT + playerGap));
             obstacles.add(new Obstacle(left, top, color, playerGap));
-            currX += obstacleHeight - obstacleGap;
+            currX -= 300;
         }
 
     }
@@ -63,14 +63,15 @@ public class ObstacleManager {
             ob.decrementX(speed * elapsedTime);
         }
 
-        if(obstacles.get(obstacles.size() -1).getRectangle().right <= 0){
+        if(obstacles.get(obstacles.size() -1).getRectangle().right <= 0){ //if the last obstacle has exited the screen to the left
             int left = Constants.SCREEN_WIDTH + 5;
             int top = (int)(Math.random()*(Constants.SCREEN_HEIGHT));
-            obstacles.add(0, new Obstacle(left,top,color,playerGap));
-            obstacles.remove(obstacles.size()-1);
-        }
-
+            obstacles.add(0, new Obstacle(left,top,color,playerGap)); //add another obstacle,,, why is this adding more than one?
+            obstacles.remove(obstacles.size() - 1); //remove the obstacles after it exist the screen
+            }
     }
+
+
 
     public void draw(Canvas canvas){
         for (Obstacle ob : obstacles){
