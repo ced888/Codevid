@@ -16,11 +16,7 @@ public class Obstacle implements GameObject {
     /**
      *the specs of the obstacle to draw
      * currentley two rectangles entering the screen vertically
-     * @param rectHeight ....rectangle height....
      * @param color
-     * @param startX
-     * @param startY
-     * @param playerGap the gap left in between the obstacles and the player
      **/
     public Obstacle(int left, int top, int color,  int playerGap)
      {
@@ -56,7 +52,6 @@ public class Obstacle implements GameObject {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawRect(rectangle, paint);
-        //canvas.drawRect(rectangle2, paint);
     }
 
     /**
@@ -76,14 +71,6 @@ public class Obstacle implements GameObject {
     }
 
 
-    /**
-     * @param y integer to change the coordinates of the obstacle by
-     */
-    public void incrementY(float y){
-        rectangle.top += y;
-        rectangle.bottom += y;
-
-    }
 
     public void decrementX(float x){
         rectangle.left -= x;
