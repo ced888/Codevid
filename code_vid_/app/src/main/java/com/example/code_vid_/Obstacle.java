@@ -10,7 +10,6 @@ public class Obstacle implements GameObject {
 
     //the following two rectangles are the rectangles that are generated to have a gap in between them
     private Rect rectangle;
-    private Rect rectangle2;
     private int color;
 
 
@@ -23,11 +22,10 @@ public class Obstacle implements GameObject {
      * @param startY
      * @param playerGap the gap left in between the obstacles and the player
      **/
-    public Obstacle(int rectHeight, int color, int startX, int startY,  int playerGap)
+    public Obstacle(int left, int top, int color,  int playerGap)
      {
-     rectangle = new Rect(0, startY, startX, startY + rectHeight);
-     rectangle2 = new Rect(startX + playerGap , startY, Constants.SCREEN_WIDTH, startY+ rectHeight);
-     this.color = color;
+         rectangle = new Rect(left, top, left + 50, top + 50); //left, top, right ,bottom
+         this.color = color;
      }
 
     /**
@@ -58,7 +56,7 @@ public class Obstacle implements GameObject {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawRect(rectangle, paint);
-        canvas.drawRect(rectangle2, paint);
+        //canvas.drawRect(rectangle2, paint);
     }
 
     /**
@@ -84,8 +82,13 @@ public class Obstacle implements GameObject {
     public void incrementY(float y){
         rectangle.top += y;
         rectangle.bottom += y;
-        rectangle2.top += y;
-        rectangle2.bottom += y;
+
+    }
+
+    public void decrementX(float x){
+        rectangle.left -= x;
+        rectangle.right -= x;
+
     }
 
 

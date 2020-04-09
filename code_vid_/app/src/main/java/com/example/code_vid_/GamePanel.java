@@ -36,7 +36,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this); //instantiate new thread
         player = new RectPlayer(new Rect(100,100,200,200), Color.RED); //our main player
         playerPoint = new Point(200, 200); //starting point
-        obstacleManager = new ObstacleManager(300, 350, 75,Color.BLUE); //obstacles
+        obstacleManager = new ObstacleManager(300, 300, 75,Color.BLUE); //obstacles
 
     }
 

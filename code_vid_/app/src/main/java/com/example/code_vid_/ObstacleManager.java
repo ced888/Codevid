@@ -15,28 +15,44 @@ public class ObstacleManager {
     private long startTime;
 
     public ObstacleManager(int playerGap, int obstacleGap, int obstacleHeight, int color){
-        this.playerGap = playerGap;
+        this.playerGap = playerGap; //width of the gap for the player to fit through
         this.obstacleGap = obstacleGap;
         this.obstacleHeight = obstacleHeight;
         this.color = color;
 
         startTime = System.currentTimeMillis();
 
-        obstacles = new ArrayList<>();
+        obstacles = new ArrayList<>(); //instantiate obstacles
 
         populateObstacles();// populates first set of obstacles
 
     }
 
+    /**
+     * we want obstacles to come onto the screen
+     * we always want to be populating the screen and going off screen
+     *
+     */
     private void populateObstacles(){
-        int currY = -5 * Constants.SCREEN_HEIGHT/4;
+        /**int currY = -5 * Constants.SCREEN_HEIGHT/4;
         while(currY <  0){
             //while it hasn't gone onto the screen yet, we keep generating obstacles (currently rectangles)
             //we want there to be a random gap for the player to go through
             int xStart = (int) (Math.random()*(Constants.SCREEN_WIDTH - playerGap)); //subtract player gap so the gap is always on screen
             obstacles.add(new Obstacle(obstacleHeight, color, xStart, currY, playerGap));
             currY += obstacleHeight + obstacleGap;
+        }**/
+
+        int currX = (Constants.SCREEN_WIDTH + 5) * Constants.SCREEN_HEIGHT/4;
+        while(currX >  0){
+            //while it hasn't gone onto the screen yet, we keep generating obstacles (currently rectangles)
+            //we want there to be a random gap for the player to go through
+            int left = Constants.SCREEN_WIDTH + 5;
+            int top = (int)(Math.random()*(Constants.SCREEN_HEIGHT + playerGap));
+            obstacles.add(new Obstacle(left, top, color, playerGap));
+            currX += obstacleHeight - obstacleGap;
         }
+
     }
 
     public void update(){
@@ -45,12 +61,13 @@ public class ObstacleManager {
         //how far is the obstacles going to move per second?
         float speed = Constants.SCREEN_HEIGHT/10000.0f; //im milliseconds. increase speed to make is more challenging
         for (Obstacle ob: obstacles){
-            ob.incrementY(speed * elapsedTime);
+            ob.decrementX(speed * elapsedTime);
         }
-        if(obstacles.get(obstacles.size() -1).getRectangle().top >= Constants.SCREEN_HEIGHT){
-            int xStart = (int) (Math.random()*(Constants.SCREEN_WIDTH - playerGap));
-            int yStart = obstacles.get(0).getRectangle().top + obstacleHeight - obstacleGap; //leave gap between obstacles when we generate a new one + adding it to top because we want lowest index to be the highest on screem
-            obstacles.add(0, new Obstacle(obstacleHeight,color,xStart, yStart, playerGap));
+
+        if(obstacles.get(obstacles.size() -1).getRectangle().right <= Constants.SCREEN_WIDTH/10){
+            int left = (int) Constants.SCREEN_WIDTH + 5;
+            int top = (int)(Math.random()*(Constants.SCREEN_HEIGHT + playerGap)); //leave gap between obstacles when we generate a new one + adding it to top because we want lowest index to be the highest on screem
+            obstacles.add(0, new Obstacle(left,top,color,playerGap));
             obstacles.remove(obstacles.size()-1);
         }
 
